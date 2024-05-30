@@ -1,0 +1,9 @@
+#/process/em/lowestElectronEnergy 50 eV
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 200000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 200000000
