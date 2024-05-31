@@ -125,7 +125,9 @@ void RunAction::EndOfRunAction(const G4Run*)
 	man->Write();
 	man->CloseFile();
 
-	G4cout << G4endl << "The amount of accumulated primaries in over layer is " << primarycounter << G4endl << G4endl;
+	G4cout << G4endl << "The amount of accumulated primaries in over layer for THIS RUN is " << primarycounter << G4endl << G4endl;
+	primarycounter = 0;
+
 }
 void RunAction::primaryinoverlayercounter()
 {

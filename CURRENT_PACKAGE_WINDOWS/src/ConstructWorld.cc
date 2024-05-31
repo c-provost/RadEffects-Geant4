@@ -99,6 +99,7 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     bottompresence = false;
     alboxpresence  = true;
     overlayerpresence = true;
+    backscatterpresence = true;
 
     // This is the world volume. Constructed of air, it is the "world" in which our physics
     // processes take place. Each input parameter is the half-length of total dimension.
@@ -202,7 +203,12 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     silChunk_log = new G4LogicalVolume(silChunk, Silicon, "SilChunk");
 
     G4double chunkZpos = -1*(height/2 - cavD + waferdepth/2) + waferdepth/2 + chunkdepth/2;
-    silChunk_phys = new G4PVPlacement(0, G4ThreeVector(3.0*cm, 3.0*cm, chunkZpos), silChunk_log, "silChunk_phys", logicalWorld, false, 0, true);
+    silChunk_xpos = 3.0*cm;
+    silChunk_ypos = 3.0*cm;
+    silChunk_zpos = chunkZpos;
+
+    // Constructing the backscatter layer
+    ConstructBackscatter(silChunk_xpos, silChunk_ypos, silChunk_zpos);
 
 
     // ************
@@ -238,8 +244,23 @@ void MyDetectorConstruction::ConstructWafer(G4double xpos, G4double ypos, G4doub
     {
         if(overlayerpresence)
         {
-            ConstructOverLayer(passlayerxpos + deltax, passlayerypos + deltay, passlayerzpos + deltaz);
+            // building the overlayer
+            passlayerxpos += deltax;
+            passlayerypos += deltay;
+            passlayerzpos += deltaz;
+
+            ConstructOverLayer(passlayerxpos, passlayerypos, passlayerzpos);
         }
+        if(backscatterpresence)
+        {
+            // building the backscatter layer
+            silChunk_xpos += deltax;
+            silChunk_ypos += deltay;
+            silChunk_zpos += deltaz;
+
+            ConstructBackscatter(silChunk_xpos, silChunk_ypos, silChunk_zpos);
+        }
+
     }
 
     
@@ -263,7 +284,7 @@ void MyDetectorConstruction::ConstructOverLayer(G4double xpos, G4double ypos, G4
 
 void MyDetectorConstruction::ConstructScoringLayers(G4double numslices, G4double startZpos, G4double sliceDepth)
 {
-    // Method that builds the scoringlayer slices within the wafer. Must be called after wafer is placed. 
+    // Method that builds the scoringlayer slices within the wafer. Must be called after wafer 'shadow volume' is placed. 
     for(int i = 0; i < numslices; i++)
     {  
         delete PhysList[i];
@@ -276,4 +297,14 @@ void MyDetectorConstruction::ConstructScoringLayers(G4double numslices, G4double
         // Creating the Physical Volumes
         PhysList[i] = new G4PVPlacement(0, G4ThreeVector(0., 0., startZpos + i * sliceDepth), LogList[i], phystitle, logwafer, false, 0, true);
     }
+}
+void MyDetectorConstruction::ConstructBackscatter(G4double xpos, G4double ypos, G4double zpos)
+{
+    // Method that builds the backscattering layer behind the wafer slices.
+    if(silChunk_phys){ delete silChunk_phys; }
+
+    G4ThreeVector position;
+    position = G4ThreeVector(xpos, ypos, zpos);
+    silChunk_phys = new G4PVPlacement(0, position, silChunk_log, "SilChunkPhys", logicalWorld, false, 0, true);
+
 }

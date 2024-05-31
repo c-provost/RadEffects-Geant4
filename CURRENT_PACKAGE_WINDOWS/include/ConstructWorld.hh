@@ -39,6 +39,8 @@ public:
     void ConstructScoringLayers(G4double, G4double, G4double);
     // The method that builds the overlayer
     void ConstructOverLayer(G4double xpos, G4double ypos, G4double zpos);
+    // The mathod that builds the backscattering Layer
+    void ConstructBackscatter(G4double xpos, G4double ypos, G4double zpos);
 
     // Volume returners for Lid and Bottom
     G4LogicalVolume* GetVolumeLid()   const { return flid;   }
@@ -126,9 +128,10 @@ private:
     G4Box* silChunk;
     G4LogicalVolume* silChunk_log;
     G4PVPlacement * silChunk_phys;
+    G4double silChunk_xpos, silChunk_ypos, silChunk_zpos;
 
     // Boolean values
-    G4bool lidpresence, bottompresence, overlayerpresence, alboxpresence;
+    G4bool lidpresence, bottompresence, overlayerpresence, alboxpresence, backscatterpresence;
 
 };
 

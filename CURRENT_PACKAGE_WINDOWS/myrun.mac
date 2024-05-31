@@ -1,9 +1,108 @@
-#/process/em/lowestElectronEnergy 50 eV
+
+# This is the large Run!!!!!!
+
+
+
+##################################################
+/DetectorGeometry/Positional/yPosWafer -4.5 cm
+/DetectorGeometry/Positional/xPosWafer -4.5 cm
+/DetectorGeometry/applyChanges
 
 /gun/energy 1.17 MeV
 
-/run/beamOn 200000000
+/run/beamOn 300000000
 
 /gun/energy 1.33 MeV
 
-/run/beamOn 200000000
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer 0 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer 4.5 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer -4.5 cm
+/DetectorGeometry/Positional/xPosWafer 0 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer 0 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer 4.5 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer -4.5 cm
+/DetectorGeometry/Positional/xPosWafer 4.5 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer 0 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################
+/DetectorGeometry/Positional/yPosWafer 4.5 cm
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 300000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 300000000
+##################################################

@@ -82,7 +82,7 @@ void PackageDetectorMessenger::SetNewValue(G4UIcommand* command, G4String comman
 
         GeometryHasChanged = false;
 
-        // Lets the runmanager know about changes to the geometry. 
+        // Lets the RunManager know about changes to the geometry. 
         runManager->GeometryHasBeenModified();  }
 
         else{ G4cout << "Geometry is up to date! - Ignoring applyChanges command" << G4endl; }
