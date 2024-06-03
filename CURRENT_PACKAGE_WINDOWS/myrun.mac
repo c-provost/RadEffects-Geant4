@@ -6,6 +6,7 @@
 ##################################################
 /DetectorGeometry/Positional/yPosWafer -4.5 cm
 /DetectorGeometry/Positional/xPosWafer -4.5 cm
+/DetectorGeometry/Positional/zPosWafer 3.5 cm
 /DetectorGeometry/applyChanges
 
 /gun/energy 1.17 MeV
