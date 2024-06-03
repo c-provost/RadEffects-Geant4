@@ -34,6 +34,7 @@ private:
     G4double dummyarray[62] = {};
     std::vector<G4double> myvalues;
     DoseInformation* doseinfo;
+
 };
 
 #endif

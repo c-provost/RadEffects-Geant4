@@ -9,6 +9,8 @@
 #include "G4SystemOfUnits.hh"
 #include "G4AccumulableManager.hh"
 
+#include <fstream>
+
 
 #include "event.hh"
 
@@ -108,7 +110,7 @@ void RunAction::BeginOfRunAction(const G4Run* run)
 
 }
 
-void RunAction::EndOfRunAction(const G4Run*)
+void RunAction::EndOfRunAction(const G4Run* run)
 {
 	G4cout << "Run Complete!" << G4endl;
 	G4AnalysisManager* man = G4AnalysisManager::Instance();
@@ -126,6 +128,25 @@ void RunAction::EndOfRunAction(const G4Run*)
 	man->CloseFile();
 
 	G4cout << G4endl << "The amount of accumulated primaries in over layer for THIS RUN is " << primarycounter << G4endl << G4endl;
+
+	// Writing the accumulated primary numbers to .txt file
+	std::fstream primarylog;
+    if(fopen("primarylog.txt", "r") == NULL)
+    {
+        primarylog.open("primarylog.txt", std::fstream::app);
+        primarylog << "Primary Counter Log For Simulation" << std::endl << std::endl;
+        primarylog << "Run No.  Primary Count" << std::endl;
+        primarylog.close();
+    }
+
+    G4int RunID = run->GetRunID();
+	std::stringstream strRunID;
+	strRunID << RunID;
+
+    primarylog.open("primarylog.txt", std::fstream::app);
+    primarylog << strRunID.str() << "  " << std::to_string(primarycounter) << std::endl;
+	// end of writing to .txt file
+
 	primarycounter = 0;
 
 }
