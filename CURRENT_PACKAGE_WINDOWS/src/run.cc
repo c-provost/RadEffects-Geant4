@@ -16,7 +16,6 @@
 
 RunAction::RunAction()
 {
-	doseinfo = new DoseInformation(62);
     G4AnalysisManager* man = G4AnalysisManager::Instance();
 	G4cout << "The location of the dose values is " << &Dose_values << G4endl;
 
@@ -86,7 +85,7 @@ RunAction::RunAction()
 }
 
 RunAction::~RunAction()
-{}
+{  }
 
 void RunAction::BeginOfRunAction(const G4Run* run)
 {
@@ -114,12 +113,11 @@ void RunAction::EndOfRunAction(const G4Run* run)
 {
 	G4cout << "Run Complete!" << G4endl;
 	G4AnalysisManager* man = G4AnalysisManager::Instance();
-	std::vector<G4double> finaldosevals = doseinfo->GetValues();
 
 	for(int i=0; i<numscoringlayers + 2; i++)
 	{	
-		man->FillNtupleDColumn(numscoringlayers + 2, i, finaldosevals[i]);
-		G4cout << "The Dose in Layer " << std::to_string(i) << " is " << finaldosevals[i] << G4endl; 
+		man->FillNtupleDColumn(numscoringlayers + 2, i, Dose_values[i]);
+		G4cout << "The Dose in Layer " << std::to_string(i) << " is " << Dose_values[i] << G4endl; 
 	}
 
 	man->AddNtupleRow(numscoringlayers + 2);
@@ -149,13 +147,14 @@ void RunAction::EndOfRunAction(const G4Run* run)
 
 	primarycounter = 0;
 
+
 }
 void RunAction::primaryinoverlayercounter()
 {
 	primarycounter += 1;
 }
 
-DoseInformation* RunAction::GetDoseInfo()
+void RunAction::AddDose(G4int i, G4double dosevalue)
 {
-	return doseinfo;
+	Dose_values[i] += dosevalue;
 }

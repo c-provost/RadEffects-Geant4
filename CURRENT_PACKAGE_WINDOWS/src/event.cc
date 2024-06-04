@@ -94,7 +94,7 @@ void EventAction::EndOfEventAction(const G4Event*)
 */
             // Sending dose command to the run object to accumulate dose in a separate .csv file for the entire run.
             // This could stand to be updated. 
-            fRunAction->GetDoseInfo()->AddDose(i, dose_rad_si_layer);
+            fRunAction->AddDose(i, dose_rad_si_layer);
         }
     }
 }
