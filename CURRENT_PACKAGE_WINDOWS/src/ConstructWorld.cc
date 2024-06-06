@@ -12,9 +12,8 @@ MyDetectorConstruction::MyDetectorConstruction()
     zWorld = 40 * cm;
 }
 
-MyDetectorConstruction::~MyDetectorConstruction()
-{ }    
-
+MyDetectorConstruction::~MyDetectorConstruction() { }   
+ 
 void MyDetectorConstruction::DefineMaterials()
 {
     G4NistManager* nist = G4NistManager::Instance();
@@ -39,14 +38,13 @@ void MyDetectorConstruction::DefineMaterials()
     worldMaterial = nist->FindOrBuildMaterial("G4_AIR");
     worldMaterial->SetName("AIR");
 }
-
 G4VPhysicalVolume* MyDetectorConstruction::Construct()
 {
 
     // ************************************************************************************************
     // Variable Farm. In here is where all the necessary variables for the construction of the geometry
     // are initialized to their default values. These, in theory, should be able to be adjusted with UI
-    // command (my current project)                             -Conrad Provost •Monday, April 29, 2024
+    // command (my current project)                            -Conrad Provost • Monday, April 29, 2024
     // ************************************************************************************************
 
         // Default parameters for the ConstructionGeometry
@@ -70,6 +68,7 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     waferlength = .5 * cm;
     waferwidth = .3 * cm;
 
+    // The initial positions of the wafer volume
     xPosWafer = (3.*cm);
     yPosWafer = (3.*cm);
     zPosWafer = -1*(height/2 - cavD + waferdepth/2);
@@ -93,63 +92,53 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
 
     // ********** END OF FARM *********** END OF FARM *********** END OF FARM ************ END OF FARM *********** // 
 
-
-    // Added these for quasi-automation of simulation configurations. 
-    lidpresence = false;
-    bottompresence = false;
-    alboxpresence  = true;
-    overlayerpresence = true;
-    backscatterpresence = true;
-
-    // This is the world volume. Constructed of air, it is the "world" in which our physics
-    // processes take place. Each input parameter is the half-length of total dimension.
-    solidWorld = new G4Box("solidWorld", xWorld, yWorld, zWorld);
-    logicalWorld = new G4LogicalVolume(solidWorld, worldMaterial, "logicalWorld");
-    physicalWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalWorld, "physicalWorld", 0, false, 0, true);
-
-
+    // ************************************************
+    // User-defined booleans for package configurations 
+    // ************************************************
+        lidpresence = false;
+        bottompresence = false;
+        alboxpresence  = true;
+        overlayerpresence = true;
+        backscatterpresence = true;
+    // ********************************************************
+    // Construction of World Volume - the Primary Mother Volume
+    // ********************************************************
+        // Each input is half length of total dimensions
+        solidWorld = new G4Box("solidWorld", xWorld, yWorld, zWorld);
+        logicalWorld = new G4LogicalVolume(solidWorld, worldMaterial, "logicalWorld");
+        physicalWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalWorld, "physicalWorld", 0, false, 0, true);
     // ********************
     // Building the package
     // ********************
-
-    G4cout <<  "The thickness is " << height / cm << G4endl;
-
-
-    mainBody = new G4Box("packChunk", packChunkwidth/2, packChunklength/2, height/2);
-    cavity = new G4Box("Cav1", cavL/2, cavW/2, cavD/2);
-    
-    Bot = new G4SubtractionSolid("Bot", mainBody, cavity, 0, G4ThreeVector(3.0 *cm, 3.0*cm, -1*(height-cavD)/2));
-    Lid = new G4SubtractionSolid("Lid", mainBody, cavity, 0, G4ThreeVector(0., 0., (height-cavD)/2));
-
-    logicBot = new G4LogicalVolume(Bot, Ceramic, "logicBot");
-    logicLid = new G4LogicalVolume(Lid, Ceramic, "logicLid");
-
-    if (bottompresence){ physBot = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicBot, "physBot", logicalWorld, false, 0, true); }
-    if (lidpresence) {   physLid = new G4PVPlacement(0, G4ThreeVector(0., 0., -1*(height + cavD + 650 * um)), logicLid, "physLid", logicalWorld, false, 0, true); }
-    
-
+        // Simplified geometry of lid and bottom layers for package, and the cavity within them.
+        mainBody = new G4Box("packChunk", packChunkwidth/2, packChunklength/2, height/2);
+        cavity = new G4Box("Cav1", cavL/2, cavW/2, cavD/2);
+        // Putting the cavity into the body
+        Bot = new G4SubtractionSolid("Bot", mainBody, cavity, 0, G4ThreeVector(3.0 *cm, 3.0*cm, -1*(height-cavD)/2));
+        Lid = new G4SubtractionSolid("Lid", mainBody, cavity, 0, G4ThreeVector(0., 0., (height-cavD)/2));
+        // Defining logical volumes for lid and bottom
+        logicBot = new G4LogicalVolume(Bot, Ceramic, "logicBot");
+        logicLid = new G4LogicalVolume(Lid, Ceramic, "logicLid");
+        // Determing whether the user wants to actually include the lid and bottom (in accordance with booleans at top of routine)
+        if (bottompresence){ physBot = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicBot, "physBot", logicalWorld, false, 0, true); }
+        if (lidpresence) {   physLid = new G4PVPlacement(0, G4ThreeVector(0., 0., -1*(height + cavD + 650 * um)), logicLid, "physLid", logicalWorld, false, 0, true); }
     // ********************************
     // Constructing the Silicon Wafer *
     // ********************************
-
-    // the silicon wafer corresponding to the chip in the package. The dummy dimensions that create the outline.
-    // To be filled with 20 slices that fill the entirety of the volume. I believe there is way to do this with 
-    // G4ParameterisedVolume, but that is a project for another day. *-Conrad Jan. 9, 2024*
-
-    // 
-    G4ThreeVector waferPos = G4ThreeVector(xPosWafer, yPosWafer, zPosWafer);
-    wafer = new G4Box("wafer", waferlength/2, waferwidth/2, waferdepth/2);
-    logwafer = new G4LogicalVolume(wafer, Silicon, "logWafer");
-
-    
+        // the silicon wafer corresponding to the chip in the package. The dummy dimensions that create the outline.
+        // To be filled with 20 slices that fill the entirety of the volume. I believe there is way to do this with 
+        // G4ParameterisedVolume, but that is a project for another day. *-Conrad Jan. 9, 2024*
+        G4ThreeVector waferPos = G4ThreeVector(xPosWafer, yPosWafer, zPosWafer);
+        wafer = new G4Box("wafer", waferlength/2, waferwidth/2, waferdepth/2);
+        logwafer = new G4LogicalVolume(wafer, Silicon, "logWafer");
     // *************************************************
     // Scoring Volumes with the wafer as a mother volume
     // *************************************************
-    numslices = 20;
-    sliceDepth = waferdepth/numslices;
-    G4Material* SliceMaterial = Silicon;
-
-    G4cout << "The Slice depth is " << sliceDepth / um << " um" << G4endl;
+        numslices = 20;
+        sliceDepth = waferdepth/numslices;
+        G4Material* SliceMaterial = Silicon;
+        // Printing to terminal how thick each scoring layer is
+        G4cout << "The Slice depth is " << sliceDepth / um << " um" << G4endl;
 
     // Basic Slice Shape for the Wafer. 
     Slice_Stub = new G4Box("Slice_Stub", waferlength/2, waferwidth/2, sliceDepth/2);
@@ -168,32 +157,21 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
         // Creating The Logical Volumes
         LogList[i] = new G4LogicalVolume(Slice_Stub, SliceMaterial, logtitle);
     }
-
     // Placing the PhysWafer Object
     ConstructWafer(xPosWafer, yPosWafer, zPosWafer, true);
-
-
     // ***********************************
     // Construction of Overlayers on Wafer
     // ***********************************
-
     G4Material* passMaterial = Ceramic;
     passLayer = new G4Box("PassLayer", waferlength/2, waferwidth/2, passlayerthickness/2);
     passLayerlog = new G4LogicalVolume(passLayer, passMaterial, "passLayerlog");
     if (overlayerpresence)
         { passLayerphys = new G4PVPlacement(0, passlayerpos, passLayerlog, "passLayerphys", logicalWorld, false, 0, true); }
-
-
     // *******************************************
     // Construction of Aluminum Box around package
     // *******************************************
-    G4Box *AlChunk = new G4Box("Chunk", xWorld/2, yWorld/2, xWorld/2);
-    G4Box *AirChunk = new G4Box("Air", xWorld/2 - .8 * mm, xWorld/2 - .8*mm, xWorld/2 - .8*mm);
-
-    AlBox = new G4SubtractionSolid("Box", AlChunk, AirChunk, 0, G4ThreeVector(0., 0., 0.));
-    AlBox_log = new G4LogicalVolume(AlBox, Aluminum, "LogBox");
-    if (alboxpresence) { AlBox_phys = new G4PVPlacement(0, G4ThreeVector(0., 0., 3.75 * cm), AlBox_log, "physBox", logicalWorld, false, 0, true); }
     
+        if (alboxpresence) { ConstructBox(0.8 * mm); }
 
     // ***********************************************************
     // Construction of Silicon 'backscattering' chunk behind wafer
@@ -206,11 +184,8 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     silChunk_xpos = 3.0*cm;
     silChunk_ypos = 3.0*cm;
     silChunk_zpos = chunkZpos;
-
     // Constructing the backscatter layer
     ConstructBackscatter(silChunk_xpos, silChunk_ypos, silChunk_zpos);
-
-
     // ************
     // Data volumes
     // ************
@@ -220,7 +195,6 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
 
     return physicalWorld;
 }
-
 void MyDetectorConstruction::ConstructWafer(G4double xpos, G4double ypos, G4double zpos, G4bool initialplacement)
 {   
     // Deleting these members if they already exist
@@ -260,15 +234,11 @@ void MyDetectorConstruction::ConstructWafer(G4double xpos, G4double ypos, G4doub
 
             ConstructBackscatter(silChunk_xpos, silChunk_ypos, silChunk_zpos);
         }
-
     }
-
-    
     // Updating the wafer position in accordance with input parameters to the construct function
     G4ThreeVector waferPosition = G4ThreeVector(xPosWafer, yPosWafer, zPosWafer);
     physwafer = new G4PVPlacement(0, waferPosition, logwafer, "physwafer", logicalWorld, false, 0, true);
     ConstructScoringLayers(numslices, startZpos, sliceDepth);
-    
 }
 void MyDetectorConstruction::ConstructOverLayer(G4double xpos, G4double ypos, G4double zpos)
 {   
@@ -281,7 +251,6 @@ void MyDetectorConstruction::ConstructOverLayer(G4double xpos, G4double ypos, G4
 
     passLayerphys = new G4PVPlacement(0, position, passLayerlog, "passLayerphys", logicalWorld, false, 0, true);
 }
-
 void MyDetectorConstruction::ConstructScoringLayers(G4double numslices, G4double startZpos, G4double sliceDepth)
 {
     // Method that builds the scoringlayer slices within the wafer. Must be called after wafer 'shadow volume' is placed. 
@@ -306,5 +275,18 @@ void MyDetectorConstruction::ConstructBackscatter(G4double xpos, G4double ypos, 
     G4ThreeVector position;
     position = G4ThreeVector(xpos, ypos, zpos);
     silChunk_phys = new G4PVPlacement(0, position, silChunk_log, "SilChunkPhys", logicalWorld, false, 0, true);
+}
+void MyDetectorConstruction::ConstructBox(G4double thickness)
+{
+    G4double basdim = xWorld/2;
+    if(AlBox) { delete AlBox; }
+    if(AlBox_log) { delete AlBox_log; }
+    if(AlBox_phys) { delete AlBox_phys; }
 
+    G4Box *AirChunk = new G4Box("AirChunk", basdim, basdim, basdim);
+    G4Box *AlChunk = new G4Box("AlChunk", basdim + thickness, basdim + thickness, basdim + thickness);
+    AlBox = new G4SubtractionSolid("Box", AlChunk, AirChunk, 0, G4ThreeVector(0., 0., 0));
+
+    AlBox_log = new G4LogicalVolume(AlBox, Aluminum, "LogBox");
+    AlBox_phys = new G4PVPlacement(0, G4ThreeVector(0., 0., 3.75 * cm), AlBox_log, "physBox", logicalWorld, false, 0, true);
 }

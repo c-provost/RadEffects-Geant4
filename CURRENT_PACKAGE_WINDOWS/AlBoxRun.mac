@@ -1,0 +1,51 @@
+# Run that changes the Aluminum Box thickness
+
+##################################################
+/DetectorGeometry/Positional/yPosWafer 0 cm
+/DetectorGeometry/Positional/xPosWafer 0 cm
+/DetectorGeometry/Positional/zPosWafer 3.5 cm
+
+/BoxGeometry/updateThickness 700 um
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 500000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 500000000
+##################################################
+/BoxGeometry/updateThickness 900 um
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 500000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 500000000
+##################################################
+/BoxGeometry/updateThickness 1100 um
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 500000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 500000000
+##################################################
+/BoxGeometry/updateThickness 1300 um
+/DetectorGeometry/applyChanges
+
+/gun/energy 1.17 MeV
+
+/run/beamOn 500000000
+
+/gun/energy 1.33 MeV
+
+/run/beamOn 500000000
+##################################################

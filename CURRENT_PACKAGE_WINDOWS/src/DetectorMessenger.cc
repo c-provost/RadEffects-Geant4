@@ -21,7 +21,6 @@ PackageDetectorMessenger::PackageDetectorMessenger(MyDetectorConstruction *inher
     // Positional Directory
     fPositionalDir = new G4UIdirectory("/DetectorGeometry/Positional/");
       fPositionalDir -> SetGuidance("The Positional Commands for the Detector Geometry");
-
     // Methods to update the  position of the wafer
     updateWaferYpos = new G4UIcmdWithADoubleAndUnit("/DetectorGeometry/Positional/yPosWafer", this);
       updateWaferYpos -> SetGuidance("Update the Y-position of the wafer");
@@ -42,6 +41,18 @@ PackageDetectorMessenger::PackageDetectorMessenger(MyDetectorConstruction *inher
     applyChangesToGeometryCmd = new G4UIcmdWithoutParameter("/DetectorGeometry/applyChanges", this);
       applyChangesToGeometryCmd -> SetGuidance("Apply selected changes to the geometry");
       applyChangesToGeometryCmd -> AvailableForStates(G4State_PreInit, G4State_Idle);
+    
+    // AlBox Directory
+    fBoxDir = new G4UIdirectory("/BoxGeometry/");
+      fBoxDir -> SetGuidance("Al Box Directory");
+
+    updateBoxThickness = new G4UIcmdWithADoubleAndUnit("/BoxGeometry/updateThickness", this);
+      updateBoxThickness -> SetGuidance("Update the thickness of the Al box");
+      updateBoxThickness -> AvailableForStates(G4State_PreInit, G4State_Idle);
+      updateBoxThickness -> SetParameterName("thickness", false);
+
+    // Command to update the thickness of the AlBox
+
     
 }   
 PackageDetectorMessenger::~PackageDetectorMessenger()
@@ -71,6 +82,13 @@ void PackageDetectorMessenger::SetNewValue(G4UIcommand* command, G4String comman
         G4cout << "The new z pos is " << zPosWafer/cm << "cm" << G4endl;
         detector->ConstructWafer(1010101, 1010101, zPosWafer, false);
         GeometryHasChanged = true;
+    }
+    if (command == updateBoxThickness)
+    {
+      G4double newthickness = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(commandContent);
+      G4cout << "The requested box thickness is " << newthickness/um << "um" << G4endl;
+      detector->ConstructBox(newthickness);
+      GeometryHasChanged = true;
     }
 
 

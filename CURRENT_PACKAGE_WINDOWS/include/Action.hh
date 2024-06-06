@@ -16,6 +16,5 @@ public:
 
     virtual void Build() const;
     virtual void BuildforMaster() const;
-
 };
 #endif

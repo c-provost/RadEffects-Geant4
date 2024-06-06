@@ -1,5 +1,5 @@
-#ifndef STEPPBRUH_HH
-#define STEPPBRUH_HH
+#ifndef STEPACTION_HH
+#define STEPACTION_HH
 
 
 #include "G4UserSteppingAction.hh"
@@ -19,6 +19,4 @@ public:
 private:
     EventAction* fEventAction;
 };
-
-
 #endif

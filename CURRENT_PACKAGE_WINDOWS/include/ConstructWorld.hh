@@ -41,6 +41,8 @@ public:
     void ConstructOverLayer(G4double xpos, G4double ypos, G4double zpos);
     // The mathod that builds the backscattering Layer
     void ConstructBackscatter(G4double xpos, G4double ypos, G4double zpos);
+    // The method that build the aluminum box
+    void ConstructBox(G4double thickness);
 
     // Volume returners for Lid and Bottom
     G4LogicalVolume* GetVolumeLid()   const { return flid;   }

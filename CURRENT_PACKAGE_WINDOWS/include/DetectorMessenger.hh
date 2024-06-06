@@ -34,11 +34,15 @@ private:
     G4UIdirectory*          fDetectorDir = nullptr;
     G4UIdirectory*          fPositionalDir = nullptr;
 
+    G4UIdirectory*          fBoxDir = nullptr;
+
     G4UIcmdWithoutParameter *applyChangesToGeometryCmd = nullptr;
 
     G4UIcmdWithADoubleAndUnit *updateWaferYpos = nullptr;
     G4UIcmdWithADoubleAndUnit *updateWaferXpos = nullptr;
     G4UIcmdWithADoubleAndUnit *updateWaferZpos = nullptr;
+
+    G4UIcmdWithADoubleAndUnit *updateBoxThickness = nullptr;
     
     G4double yPosWafer, xPosWafer, zPosWafer;
 
