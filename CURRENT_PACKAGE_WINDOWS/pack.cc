@@ -6,15 +6,11 @@
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 
-
-
 #include "ConstructWorld.hh"
 #include "PhysList.hh"
 #include "Action.hh"
 #include "Physics.hh"
 #include "DetectorMessenger.hh"
-
-
 
 int main(int argc, char** argv)
 {
@@ -30,10 +26,7 @@ int main(int argc, char** argv)
     runManager->SetUserInitialization(new PhysList());
     runManager->SetUserInitialization(new ActionInitialization());
 
-
     runManager->Initialize();
-    
-
     
     if (argc == 1)
     {
@@ -57,12 +50,11 @@ int main(int argc, char** argv)
         UImanager->ApplyCommand(command + fileName);
     }
 
-
     delete visManager;
     delete runManager;
+    //delete detMess;
 
     G4cout << "\n" << "Simulation Completed " << G4endl
             << "Thanks for your time 😸" << "\n\n";
     return 0;
-
 }

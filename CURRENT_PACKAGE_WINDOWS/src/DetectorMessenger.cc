@@ -53,10 +53,20 @@ PackageDetectorMessenger::PackageDetectorMessenger(MyDetectorConstruction *inher
 
     // Command to update the thickness of the AlBox
 
-    
 }   
 PackageDetectorMessenger::~PackageDetectorMessenger()
 {
+  delete updateBoxThickness;
+
+  delete updateWaferZpos;
+  delete updateWaferXpos;
+  delete updateWaferYpos;
+
+  delete applyChangesToGeometryCmd;
+
+  delete fBoxDir;
+  delete fDetectorDir;
+  delete fPositionalDir;
 }
 
 void PackageDetectorMessenger::SetNewValue(G4UIcommand* command, G4String commandContent)
@@ -64,21 +74,21 @@ void PackageDetectorMessenger::SetNewValue(G4UIcommand* command, G4String comman
     // ********* Positional Command Farm ********** // 
     if (command == updateWaferYpos)
     {
-        yPosWafer = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(commandContent);
+        G4double yPosWafer = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(commandContent);
         G4cout << "The new y pos is " << yPosWafer/cm << G4endl;
         detector->ConstructWafer(1010101, yPosWafer, 1010101, false);
         GeometryHasChanged = true;
     }
     if (command == updateWaferXpos)
     {
-        xPosWafer = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(commandContent);
+        G4double xPosWafer = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(commandContent);
         G4cout << "The new x pos is " << xPosWafer/cm << "cm" << G4endl;
         detector->ConstructWafer(xPosWafer, 1010101, 1010101, false);
         GeometryHasChanged = true;
     }
     if (command == updateWaferZpos)
     {
-        zPosWafer = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(commandContent);
+        G4double zPosWafer = G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(commandContent);
         G4cout << "The new z pos is " << zPosWafer/cm << "cm" << G4endl;
         detector->ConstructWafer(1010101, 1010101, zPosWafer, false);
         GeometryHasChanged = true;

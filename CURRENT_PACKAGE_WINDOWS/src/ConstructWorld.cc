@@ -72,6 +72,7 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     xPosWafer = (3.*cm);
     yPosWafer = (3.*cm);
     zPosWafer = -1*(height/2 - cavD + waferdepth/2);
+    G4cout << "The intial z position of wafer is " << zPosWafer/cm << "cm" << G4endl;
 
     // Pack Chunk Dimensions
     packChunkwidth = .8 * cm;
@@ -159,9 +160,9 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     }
     // Placing the PhysWafer Object
     ConstructWafer(xPosWafer, yPosWafer, zPosWafer, true);
-    // ***********************************
-    // Construction of Overlayers on Wafer
-    // ***********************************
+    // **********************************
+    // Construction of Overlayer on Wafer
+    // **********************************
     G4Material* passMaterial = Ceramic;
     passLayer = new G4Box("PassLayer", waferlength/2, waferwidth/2, passlayerthickness/2);
     passLayerlog = new G4LogicalVolume(passLayer, passMaterial, "passLayerlog");

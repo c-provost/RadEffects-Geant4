@@ -44,11 +44,6 @@ private:
 
     G4UIcmdWithADoubleAndUnit *updateBoxThickness = nullptr;
     
-    G4double yPosWafer, xPosWafer, zPosWafer;
-
-public:
-    G4double GetyPosWafer();
-
 };
 
 
