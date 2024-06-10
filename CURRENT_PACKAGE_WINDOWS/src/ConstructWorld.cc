@@ -28,6 +28,7 @@ void MyDetectorConstruction::DefineMaterials()
     SiO2          = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
     plastic       = nist->FindOrBuildMaterial("G4_POLYVINYL_CHLORIDE");
     poly          = nist->FindOrBuildMaterial("G4_POLYACRYLONITRILE");
+    lead          = nist->FindOrBuildMaterial("G4_Pb");
 
 
     G4double a = 1.01*g/mole;
@@ -99,8 +100,9 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
         lidpresence = false;
         bottompresence = false;
         alboxpresence  = true;
-        overlayerpresence = true;
+        overlayerpresence = false;
         backscatterpresence = true;
+        pbBoxpresence = true;
     // ********************************************************
     // Construction of World Volume - the Primary Mother Volume
     // ********************************************************
@@ -280,9 +282,13 @@ void MyDetectorConstruction::ConstructBackscatter(G4double xpos, G4double ypos, 
 void MyDetectorConstruction::ConstructBox(G4double thickness)
 {
     G4double basdim = xWorld/2;
+    boxThickness = thickness;
+
     if(AlBox) { delete AlBox; }
     if(AlBox_log) { delete AlBox_log; }
     if(AlBox_phys) { delete AlBox_phys; }
+
+    if (pbBoxpresence) { ConstructLead((basdim + thickness), 2*mm); }
 
     G4Box *AirChunk = new G4Box("AirChunk", basdim, basdim, basdim);
     G4Box *AlChunk = new G4Box("AlChunk", basdim + thickness, basdim + thickness, basdim + thickness);
@@ -290,4 +296,26 @@ void MyDetectorConstruction::ConstructBox(G4double thickness)
 
     AlBox_log = new G4LogicalVolume(AlBox, Aluminum, "LogBox");
     AlBox_phys = new G4PVPlacement(0, G4ThreeVector(0., 0., 3.75 * cm), AlBox_log, "physBox", logicalWorld, false, 0, true);
+}
+void MyDetectorConstruction::ConstructLead(G4double cavsize, G4double thickness)
+{
+    pbCavSize = cavsize;
+    pbThickness = thickness;
+
+    G4double basdim = cavsize;
+    if (LeadBox) { delete LeadBox; }
+    if (LeadBox_log) { delete LeadBox_log; }
+    if (LeadBox_phys) { delete LeadBox_phys; }
+
+    G4Box *LeadAir = new G4Box("PbAirChunk", basdim, basdim, basdim);
+    G4Box *LeadChunk = new G4Box("PbChunk", basdim + thickness, basdim + thickness, basdim + thickness);
+    LeadBox = new G4SubtractionSolid("PbBox", LeadChunk, LeadAir, 0, G4ThreeVector(0., 0., 0.));
+
+    LeadBox_log = new G4LogicalVolume(LeadBox, lead, "LogPb");
+    if(pbBoxpresence) { LeadBox_phys = new G4PVPlacement(0, G4ThreeVector(0., 0., 3.75*cm), LeadBox_log, "physPb", logicalWorld, false, 0, true); }
+}
+void MyDetectorConstruction::LeadBoxChanger(G4bool presence)
+{
+    pbBoxpresence = presence;
+    ConstructLead(pbCavSize, pbThickness);
 }

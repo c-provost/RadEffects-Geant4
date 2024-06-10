@@ -14,8 +14,7 @@ class MyDetectorConstruction;
 class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithoutParameter;
-
-
+class G4UIcmdWithABool;
 
 class PackageDetectorMessenger : public G4UImessenger
 {
@@ -43,7 +42,8 @@ private:
     G4UIcmdWithADoubleAndUnit *updateWaferZpos = nullptr;
 
     G4UIcmdWithADoubleAndUnit *updateBoxThickness = nullptr;
-    
+
+    G4UIcmdWithABool *pbBoxpresence = nullptr;
 };
 
 

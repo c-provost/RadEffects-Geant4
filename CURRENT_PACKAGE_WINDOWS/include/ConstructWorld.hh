@@ -43,6 +43,10 @@ public:
     void ConstructBackscatter(G4double xpos, G4double ypos, G4double zpos);
     // The method that build the aluminum box
     void ConstructBox(G4double thickness);
+    // The method that constructs the lead box
+    void ConstructLead(G4double cavsize, G4double thickness);
+    // The method that changes the Lead Box bool
+    void LeadBoxChanger(G4bool presence);
 
     // Volume returners for Lid and Bottom
     G4LogicalVolume* GetVolumeLid()   const { return flid;   }
@@ -86,7 +90,7 @@ private:
     void DefineMaterials();
     G4Material *worldMaterial, *Steel, *Gold, *polyStyrene,
                *Aluminum, *Tungsten, *Silicon, *Ceramic,
-               *SiO2, *plastic, *poly;
+               *SiO2, *plastic, *poly, *lead;
 
     // World Volume
     G4double xWorld, yWorld, zWorld;
@@ -125,6 +129,13 @@ private:
     G4SubtractionSolid *AlBox;
     G4LogicalVolume *AlBox_log;       
     G4PVPlacement *AlBox_phys;
+    G4double boxThickness;
+    // Lead BOx
+    G4SubtractionSolid *LeadBox;
+    G4LogicalVolume *LeadBox_log;
+    G4PVPlacement *LeadBox_phys;
+    G4double pbThickness;
+    G4double pbCavSize;
 
     // Silicon Chunk behind the scoring layers
     G4Box* silChunk;
@@ -133,7 +144,11 @@ private:
     G4double silChunk_xpos, silChunk_ypos, silChunk_zpos;
 
     // Boolean values
-    G4bool lidpresence, bottompresence, overlayerpresence, alboxpresence, backscatterpresence;
+    G4bool lidpresence, bottompresence, overlayerpresence, alboxpresence, backscatterpresence, pbBoxpresence;
+
+    
+
+
 
 };
 

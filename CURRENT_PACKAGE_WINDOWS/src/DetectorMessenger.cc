@@ -3,6 +3,7 @@
 #include "ConstructWorld.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithABool.hh"
 #include "G4UIcommand.hh"
 #include "G4VisManager.hh"
 #include "G4VisExecutive.hh"
@@ -46,12 +47,18 @@ PackageDetectorMessenger::PackageDetectorMessenger(MyDetectorConstruction *inher
     fBoxDir = new G4UIdirectory("/BoxGeometry/");
       fBoxDir -> SetGuidance("Al Box Directory");
 
+    // Command to update the thickness of the AlBox
     updateBoxThickness = new G4UIcmdWithADoubleAndUnit("/BoxGeometry/updateThickness", this);
       updateBoxThickness -> SetGuidance("Update the thickness of the Al box");
       updateBoxThickness -> AvailableForStates(G4State_PreInit, G4State_Idle);
       updateBoxThickness -> SetParameterName("thickness", false);
 
-    // Command to update the thickness of the AlBox
+    // Command to change whether the Pb box is present
+    pbBoxpresence = new G4UIcmdWithABool("/BoxGeometry/pbPresence", this);
+      pbBoxpresence -> SetGuidance("Update the presence of the Pb Box");
+      pbBoxpresence -> AvailableForStates(G4State_PreInit, G4State_Idle);
+      pbBoxpresence -> SetParameterName("status", false);
+      
 
 }   
 PackageDetectorMessenger::~PackageDetectorMessenger()
@@ -100,8 +107,13 @@ void PackageDetectorMessenger::SetNewValue(G4UIcommand* command, G4String comman
       detector->ConstructBox(newthickness);
       GeometryHasChanged = true;
     }
-
-
+    if (command == pbBoxpresence)
+    {
+      G4bool value = G4UIcmdWithABool::GetNewBoolValue(commandContent);
+      G4cout << "Pb Box Presence changed!" << G4endl;
+      detector -> LeadBoxChanger(value);
+      GeometryHasChanged = true;
+    }
     if (command == applyChangesToGeometryCmd)
     {
         if(GeometryHasChanged == true)          {
@@ -115,4 +127,5 @@ void PackageDetectorMessenger::SetNewValue(G4UIcommand* command, G4String comman
 
         else{ G4cout << "Geometry is up to date! - Ignoring applyChanges command" << G4endl; }
     }
+
 }
