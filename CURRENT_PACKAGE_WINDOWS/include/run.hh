@@ -19,6 +19,7 @@ public:
 
     void AddDose(G4int index, G4double dose);
     void primaryinoverlayercounter();
+    void SetSaveFileName(G4String saveFileName);
 
     // The count of total primaries that enter the overlayer in a given run. Reset at the end of each run
     G4int primarycounter = 0;
@@ -29,6 +30,9 @@ private:
     // In this array (Dose_values[62]), the indicies correspond to the layer in which dose is deposited.
     // Index 0 & 61 correspond to the dose in the lid and bottom of  the package, respectively.
     G4double Dose_values[62];
+    
+    // The string that the run class uses to set as an output file. 
+    G4String SaveFileName;
 };
 
 #endif

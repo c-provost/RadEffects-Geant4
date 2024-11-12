@@ -1,15 +1,28 @@
 #include "ConstructWorld.hh"
 #include "DetectorMessenger.hh"
 #include <cmath>
-
+#include "PackSensitiveDetector.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4PhysicalVolumeStore.hh"
+#include "G4SolidStore.hh"
 
 MyDetectorConstruction::MyDetectorConstruction()
 {
+    lvs = G4LogicalVolumeStore::GetInstance();
+    pvs = G4PhysicalVolumeStore::GetInstance();
     DefineMaterials();
     // Half dimensions of the world volume
     xWorld = 10 * cm; 
     yWorld = 10 * cm;
     zWorld = 40 * cm;
+
+    // Initializing the number of scoring volumes
+    num_scoring = 20;
+
+    // Initializing default scoring volume placement. 
+
+        PhysList = std::vector<G4LogicalVolume*>(num_scoring, 0);
+
 }
 
 MyDetectorConstruction::~MyDetectorConstruction() { }   
@@ -137,29 +150,18 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     // *************************************************
     // Scoring Volumes with the wafer as a mother volume
     // *************************************************
-        numslices = 20;
-        sliceDepth = waferdepth/numslices;
+        sliceDepth = waferdepth/num_scoring;
         G4Material* SliceMaterial = Silicon;
         // Printing to terminal how thick each scoring layer is
         G4cout << "The Slice depth is " << sliceDepth / um << " um" << G4endl;
 
     // Basic Slice Shape for the Wafer. 
-    Slice_Stub = new G4Box("Slice_Stub", waferlength/2, waferwidth/2, sliceDepth/2);
+    ScoringSolid = new G4Box("ScoringSolid", waferlength/2, waferwidth/2, sliceDepth/2);
+    ScoringLog = new G4LogicalVolume(ScoringSolid, SliceMaterial, "ScoringLog");
 
     // The start Z position for scoringvolume placment. (within the wafer)
     startZpos = -1 * (waferdepth/2) + sliceDepth/2;
 
-    for(int i = 0; i < numslices; i++)
-    {  
-        G4String logtitle;
-        // Creating the names for the layers.
-        if (i < 9) { logtitle  = "logSlice_0"  + std::to_string(i+1); }
-
-        else       { logtitle = "logSlice_"  + std::to_string(i+1); }
-
-        // Creating The Logical Volumes
-        LogList[i] = new G4LogicalVolume(Slice_Stub, SliceMaterial, logtitle);
-    }
     // Placing the PhysWafer Object
     ConstructWafer(xPosWafer, yPosWafer, zPosWafer, true);
     // **********************************
@@ -196,12 +198,18 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct()
     flid = logicLid;
     fOverLayer = passLayerlog;
 
+    G4cout << "We are now going though the physical volumes !!" << G4endl;
+    for(G4PVPlacement* vol : PhysList)
+    {
+        G4bool istrue = vol->CheckOverlaps();
+    }
+
     return physicalWorld;
 }
 void MyDetectorConstruction::ConstructWafer(G4double xpos, G4double ypos, G4double zpos, G4bool initialplacement)
 {   
     // Deleting these members if they already exist
-    if(physwafer)     { delete physwafer; }
+    if(physwafer)     { pvs->DeRegister(physwafer); delete physwafer; }
     
     // Upates the xposition, yposition, and zposition of the wafer if not the NULL code (1010101)
     // There's got to be a better way to set defaults, but keyword arg funcitionality does not 
@@ -241,7 +249,7 @@ void MyDetectorConstruction::ConstructWafer(G4double xpos, G4double ypos, G4doub
     // Updating the wafer position in accordance with input parameters to the construct function
     G4ThreeVector waferPosition = G4ThreeVector(xPosWafer, yPosWafer, zPosWafer);
     physwafer = new G4PVPlacement(0, waferPosition, logwafer, "physwafer", logicalWorld, false, 0, true);
-    ConstructScoringLayers(numslices, startZpos, sliceDepth);
+    ConstructScoringLayers(numscoring, startZpos, sliceDepth);
 }
 void MyDetectorConstruction::ConstructOverLayer(G4double xpos, G4double ypos, G4double zpos)
 {   
@@ -257,23 +265,20 @@ void MyDetectorConstruction::ConstructOverLayer(G4double xpos, G4double ypos, G4
 void MyDetectorConstruction::ConstructScoringLayers(G4double numslices, G4double startZpos, G4double sliceDepth)
 {
     // Method that builds the scoringlayer slices within the wafer. Must be called after wafer 'shadow volume' is placed. 
-    for(int i = 0; i < numslices; i++)
+    for(int i = 0; i < num_scoring; i++)
     {  
+        pvs->DeRegister(PhysList[i]);
         delete PhysList[i];
-        G4String phystitle;
-        // Creating the names for the layers.
-        if (i < 9) { phystitle = "physSlice_0" + std::to_string(i+1); }
-
-        else       { phystitle = "physSlice_" + std::to_string(i+1); }
 
         // Creating the Physical Volumes
-        PhysList[i] = new G4PVPlacement(0, G4ThreeVector(0., 0., startZpos + i * sliceDepth), LogList[i], phystitle, logwafer, false, 0, true);
+        PhysList[i] = new G4PVPlacement(0, G4ThreeVector(0., 0., startZpos + i * sliceDepth), ScoringLog, "ScoringPhys", logwafer, false, i, true);
     }
 }
 void MyDetectorConstruction::ConstructBackscatter(G4double xpos, G4double ypos, G4double zpos)
 {
     // Method that builds the backscattering layer behind the wafer slices.
-    if(silChunk_phys){ delete silChunk_phys; }
+    if(silChunk_phys){ pvs->DeRegister(silChunk_phys);
+                         delete silChunk_phys; }
 
     G4ThreeVector position;
     position = G4ThreeVector(xpos, ypos, zpos);
@@ -284,8 +289,9 @@ void MyDetectorConstruction::ConstructBox(G4double thickness)
     G4double basdim = xWorld/2;
     boxThickness = thickness;
 
-    if(AlBox) { delete AlBox; }
-    if(AlBox_log) { delete AlBox_log; }
+    if(AlBox) { pvs->DeRegister(AlBox);
+                delete AlBox; }
+    if(AlBox_log) { lvs->Dedelete AlBox_log; }
     if(AlBox_phys) { delete AlBox_phys; }
 
     if (pbBoxpresence) { ConstructLead((basdim + thickness), 2*mm); }

@@ -48,18 +48,6 @@ public:
     // The method that changes the Lead Box bool
     void LeadBoxChanger(G4bool presence);
 
-    // Volume returners for Lid and Bottom
-    G4LogicalVolume* GetVolumeLid()   const { return flid;   }
-    G4LogicalVolume* GetVolumeBot()   const { return fbottom;}
-
-    // Overlayer Returner
-    G4LogicalVolume* GetVolumeOverlayer() const { return fOverLayer; }
-
-    // Scoring Volume Returner for Data Collection
-    //↓ What is this type?
-    auto GetScoringVolumes(G4int scoringvolume) const { return LogList[scoringvolume - 1]; }
-
-
 private:
     // *****************
     // The variable Farm
@@ -105,9 +93,14 @@ private:
     G4PVPlacement *physLid, *physBot;
 
     // Computer Chip Volumes
-    G4Box *wafer, *Slice_Stub;
-    G4LogicalVolume *logwafer, *LogList[60] = {};
-    G4PVPlacement *physwafer, *PhysList[60] = {};
+    G4Box *wafer, *ScoringSolid;
+    G4LogicalVolume *ScoringLog;
+
+    
+    G4LogicalVolume *logwafer;
+
+    G4PVPlacement *physwafer,
+        std::vector<G4PVPlacement*> PhysList;
 
     // Overlayers of Wafer
     G4Box* passLayer;
@@ -143,11 +136,16 @@ private:
     G4PVPlacement * silChunk_phys;
     G4double silChunk_xpos, silChunk_ypos, silChunk_zpos;
 
+    // Logical Volume Store
+    G4LogicalVolumeStore* lvs;
+    G4PhysicalVolumeStore* pvs;
+
     // Boolean values
     G4bool lidpresence, bottompresence, overlayerpresence, alboxpresence, backscatterpresence, pbBoxpresence;
 
-    
+    virtual void ConstructSDandField();
 
+    int num_scoring = 60;
 
 
 };

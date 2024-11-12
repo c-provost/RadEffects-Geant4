@@ -24,7 +24,7 @@ public:
     // *******************
 
     // Energy Dep adder for the lid and bottom
-    void addEnergydepLid  (G4double edepLid  ) {   fEdep_lid += edepLid;   }
+    void addEnergydepLid  (G4double edepLid  ) {   fEdep_lid+= edepLid;   }
     void addEnergydepBot  (G4double edepBot  ) {   fEdep_bot += edepBot;   }
 
     // Event-Scale Energy Dep adder for wafer layers. 

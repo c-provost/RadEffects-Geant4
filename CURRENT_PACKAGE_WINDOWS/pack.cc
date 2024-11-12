@@ -12,11 +12,30 @@
 #include "Physics.hh"
 #include "DetectorMessenger.hh"
 
+#include "Randomize.hh"
+#include <sys/unistd.h>
+#include <sys/time.h>
+#include <time.h>
+
 int main(int argc, char** argv)
 {
     int returncode = system("clear");
     G4cout << "Welcome to your Geant4 Simulation!" << G4endl << "Glad to have you here!" << G4endl;
     G4UIExecutive* ui = 0;
+
+   // Choose the Random engine
+  	struct timeval tt;
+  	auto pid = getpid();
+  	gettimeofday(&tt,NULL);
+  	long timeSeed = tt.tv_sec*1000+(tt.tv_usec/1000);
+  	timeSeed += pid*3137; //different machines, same time --> different seed
+  	timeSeed = std::abs(timeSeed); //take only positive seeds.
+  	G4cout << "Setting random seed: " << timeSeed << G4endl;
+  //
+  // Set Random generator
+  	CLHEP::HepRandom::setTheEngine( new CLHEP::HepJamesRandom );
+  	CLHEP::HepRandom::setTheSeed( timeSeed );
+
 
     MyDetectorConstruction* detConst = new MyDetectorConstruction();
     PackageDetectorMessenger* detMess = new PackageDetectorMessenger(detConst);

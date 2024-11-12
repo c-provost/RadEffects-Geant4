@@ -1,0 +1,4 @@
+/Users/condo/Geant-4/RadEffects-Geant4/Current Package/build/CMakeFiles/pack.dir
+/Users/condo/Geant-4/RadEffects-Geant4/Current Package/build/CMakeFiles/package.dir
+/Users/condo/Geant-4/RadEffects-Geant4/Current Package/build/CMakeFiles/edit_cache.dir
+/Users/condo/Geant-4/RadEffects-Geant4/Current Package/build/CMakeFiles/rebuild_cache.dir

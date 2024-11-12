@@ -11,6 +11,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 {
     G4int numscoringlayers = 60;
 
+
     // The volume that the particle is in before the step is taken.
     G4LogicalVolume* const volume = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
 

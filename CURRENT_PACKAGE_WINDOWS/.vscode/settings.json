@@ -3,7 +3,8 @@
         "*.icc": "cpp",
         "__locale": "cpp",
         "ios": "cpp",
-        "LoadPlotNtuple.C": "cpp"
+        "LoadPlotNtuple.C": "cpp",
+        "analysis.C": "cpp"
     },
     "cmake.configureOnOpen": true
 }

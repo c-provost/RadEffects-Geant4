@@ -15,6 +15,9 @@
 
 RunAction::RunAction()
 {
+	// The default save file name for the data that gets output at the en d of the run. 
+	SaveFileName = "Hits.root";
+
     G4AnalysisManager* man = G4AnalysisManager::Instance();
 
 	numscoringlayers = 60;
@@ -97,7 +100,7 @@ void RunAction::BeginOfRunAction(const G4Run* run)
 	G4int RunID = run->GetRunID();
 	std::stringstream strRunID;
 	strRunID << RunID;
-	man->OpenFile("output"+strRunID.str()+".csv");
+	man->OpenFile(SaveFileName);
 }
 
 void RunAction::EndOfRunAction(const G4Run* run)
@@ -152,4 +155,8 @@ void RunAction::AddDose(G4int i, G4double dosevalue)
 	// Holds the scoring layer and lid information, with the lid and bottom being the first and last
 	// Indicies respectively.
 	Dose_values[i] += dosevalue;
+}
+void RunAction::SetSaveFileName(G4String savefilename)
+{
+    SaveFileName = savefilename;
 }
