@@ -29,7 +29,7 @@ class RadiationDetectorConstruction : public G4VUserDetectorConstruction
     void DefineMaterials();
     void ConstructLid();
     void ConstructBot();
-    void ConstructPlane(G4double, G4double, G4double, G4ThreeVector);  // Constructing the Pb-Al Plane per MIL STD 883
+    void ConstructPlane(G4double, G4double depth = 1.5 * mm);  // Constructing the Pb-Al Plane per MIL STD 883
     virtual void ConstructSDAndField();
     void ConstructWafer(G4double, G4double, G4double, G4ThreeVector);
     void ConstructScoringLayers(G4double, G4double, G4double, G4double);
@@ -70,6 +70,9 @@ class RadiationDetectorConstruction : public G4VUserDetectorConstruction
     struct pdim;
 
     RadPackSensitiveDetector *theDetector;
+
+    G4bool firstPlaneConst; // The boolean value that gets flipped to false after a new plane geometry is constructed.
+    G4double planeDefaultDepth;
 
 };
 

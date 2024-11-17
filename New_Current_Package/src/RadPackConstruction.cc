@@ -14,7 +14,11 @@ RadiationDetectorConstruction::RadiationDetectorConstruction()
     lvs = G4LogicalVolumeStore::GetInstance();
     pvs = G4PhysicalVolumeStore::GetInstance();
    
+   // Initializing the first plane boolean flag
+    firstPlaneConst = true;
 
+   // The default depth of the Lead Wall
+    planeDefaultDepth = 1.5 * mm;
 
    // Initializing the dimensions of the world volume
     xDimWorld = 10*cm;
@@ -89,7 +93,7 @@ G4VPhysicalVolume* RadiationDetectorConstruction::Construct()
 
     ConstructWafer(.5*cm, .7*cm, 500*um, G4ThreeVector(0., 0., 0.5*m));
     ConstructScoringLayers(20, .5*cm, .7*cm, 500*um);
-    ConstructPlane(xDimWorld*2, yDimWorld*2, 1.5*mm, G4ThreeVector(0, 0, -0.2*m));
+    ConstructPlane(-.2*m, 1.5*mm);
 
 
 
@@ -154,29 +158,43 @@ void RadiationDetectorConstruction::ConstructScoringLayers(G4double numslices, G
 
 }
 
-void RadiationDetectorConstruction::ConstructPlane(G4double length, G4double width, G4double depth, G4ThreeVector position)
+void RadiationDetectorConstruction::ConstructPlane(G4double zPos, G4double depth)
 {
     // This is the methhod that will construct the Pb-Al plane in front of our test article. This will be the same x and y dimensions as the world volume.
+
+   // Creating a position vector using hte input z-position. 
+    G4ThreeVector position = G4ThreeVector(0., 0., zPos);
+
+   // DeRegistering existing volumes if they have been placed
+    if(!firstPlaneConst)
+    {
+        lvs->DeRegister(lvs->GetVolume("PbPlane"));
+        pvs->DeRegister(pvs->GetVolume("PbPlane"));
+
+        lvs->DeRegister(lvs->GetVolume("AlPlane"));
+        pvs->DeRegister(pvs->GetVolume("AlPlane"));
+        
+    }
 
     G4VSolid *pB_plane; G4LogicalVolume *pB_plane_log; G4VPhysicalVolume* pB_plane_phys;
     G4VSolid *al_plane; G4LogicalVolume *al_plane_log; G4VPhysicalVolume* al_plane_phys;
 
-    //pvs->DeRegister(pvs->GetVolume("PbPlane"));
-    //lvs->DeRegister(lvs->GetVolume("PbPlane"));
-
    // Instituting the input parameters as full lengths because that feels more ergonomic. Translating to half-lengths for G4
-    pB_plane = new G4Box("PbPlane", length/2, width/2, depth/2);
+    pB_plane = new G4Box("PbPlane", xDimWorld, yDimWorld, depth/2);
     pB_plane_log = new G4LogicalVolume(pB_plane, Lead, "PbPlane");
     pB_plane_phys = new G4PVPlacement(0, position, pB_plane_log, "PbPlane", theWorldLog, false, 0, true);
 
    // Generating an aluminum plane that immediately follows the lead one. 
-    al_plane = new G4Box("AlPlane", length/2, width/2, 400*um);
+    al_plane = new G4Box("AlPlane", xDimWorld, yDimWorld, 400*um);
     al_plane_log = new G4LogicalVolume(al_plane, Aluminum, "AlPlane");
 
   // Creating the center of the al layer, immediately succeeding the PbPlane.
   // 400 um  added because that is the depth of the aluminum plane.
-    G4ThreeVector alPosition = position + G4ThreeVector(0, 0, -1 * depth/2 - 400*um);
+    G4ThreeVector alPosition = position + G4ThreeVector(0, 0, depth/2 + 400*um);
     al_plane_phys = new G4PVPlacement(0, alPosition, al_plane_log, "AlPlane", theWorldLog, false, 0, true);
+
+   // Setting the firstPlane construction flag to false
+    firstPlaneConst = false;
 }
 
 
@@ -184,7 +202,7 @@ void RadiationDetectorConstruction::ConstructPlane(G4double length, G4double wid
 void RadiationDetectorConstruction::ConstructWafer(G4double length, G4double width, G4double height, G4ThreeVector position)
 {
     G4cout << "<WaferConstruction!>" << G4endl << "\t" << "<xDim>: " << length << G4endl
-            << "\t" << "yDim>: " << width << G4endl
+            << "\t" << "<yDim>: " << width << G4endl
             << "\t" << "<zDim>: " << height << G4endl
             << "\t" << "<position>: " << position << G4endl;
 

@@ -1,0 +1,20 @@
+#Setting the file to which histogram information will be written
+/RadiationPack/hitsfile primaryRun_01.root
+/SimGeometry/Positional/makePlane -0.2 m
+/SimGeometry/Positional/applyChanges
+
+/run/beamOn 2000000000
+
+
+/RadiationPack/hitsfile primaryRun_02.root
+/SimGeometry/Positional/makePlane 0.1 m
+/SimGeometry/Positional/applyChanges
+
+/run/beamOn 2000000000
+
+
+/RadiationPack/hitsfile primaryRun_03.root
+/SimGeometry/Positional/makePlane 0.4 m
+/SimGeometry/Positional/applyChanges
+
+/run/beamOn 2000000000

@@ -21,6 +21,12 @@ RadPackRunAction::RadPackRunAction()
 
     G4AnalysisManager* man = G4AnalysisManager::Instance();
 
+	
+	man->CreateNtuple("hits", "hits");
+	man->CreateNtupleIColumn("VolumeCopyNo.");
+	man->CreateNtupleDColumn("EnergyDep");
+
+	man->FinishNtuple(0);
 
 	numscoringlayers = 60;
 
@@ -40,12 +46,6 @@ void RadPackRunAction::BeginOfRunAction(const G4Run* run)
 	// Gets reset for each run.
 	
 	man->OpenFile(SaveFileName);
-
-	man->CreateNtuple("hits", "hits");
-	man->CreateNtupleIColumn("VolumeCopyNo.");
-	man->CreateNtupleDColumn("EnergyDep");
-
-	man->FinishNtuple(0);
 	
 }
 

@@ -21,6 +21,7 @@
 #include "RadPackConstruction.hh"
 #include "RadPackActionInitialization.hh"
 #include "RadPackPhysList.hh"
+#include "RadPackGeometryMessenger.hh"
 
 
 #include "Randomize.hh"
@@ -61,6 +62,8 @@ int main(int argc, char** argv)
 
    // Creating new RadiationDetectorConstruction object
     RadiationDetectorConstruction* theDetectorConstruction = new RadiationDetectorConstruction();
+
+    RadPackDetectorMessenger *theMess = new RadPackDetectorMessenger(theDetectorConstruction);
     theRunManager->SetUserInitialization(theDetectorConstruction);
     theRunManager->SetUserInitialization(new RadPackPhysList());
     theRunManager->SetUserInitialization(new RadPackActionInitialization());
