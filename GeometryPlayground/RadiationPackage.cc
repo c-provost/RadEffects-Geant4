@@ -21,7 +21,6 @@
 #include "RadPackConstruction.hh"
 #include "RadPackActionInitialization.hh"
 #include "RadPackPhysList.hh"
-#include "RadPackGeometryMessenger.hh"
 
 
 #include "Randomize.hh"
@@ -46,29 +45,27 @@ int main(int argc, char** argv)
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
 
-//    // Setting random engine and seed
-//     struct timeval tt;
-//     auto pid = getpid();
-//     gettimeofday(&tt, NULL);
-//     long timeSeed = tt.tv_sec*1000+(tt.tv_usec/1000);
-//     timeSeed += pid*3137;  // different machines, same time --> different seed
-//     timeSeed = std::abs(timeSeed); // take only positive seeds.
-//     G4cout << "<randomSeed>: " << timeSeed << G4endl;
+   // Setting random engine and seed
+    struct timeval tt;
+    auto pid = getpid();
+    gettimeofday(&tt, NULL);
+    long timeSeed = tt.tv_sec*1000+(tt.tv_usec/1000);
+    timeSeed += pid*3137;  // different machines, same time --> different seed
+    timeSeed = std::abs(timeSeed); // take only positive seeds.
+    G4cout << "<randomSeed>: " << timeSeed << G4endl;
 
    // Setting Random Generator
     CLHEP::HepRandom::setTheEngine( new CLHEP::HepJamesRandom );
-  	//CLHEP::HepRandom::setTheSeed( timeSeed );
+  	CLHEP::HepRandom::setTheSeed( timeSeed );
 
 
    // Creating new RadiationDetectorConstruction object
     RadiationDetectorConstruction* theDetectorConstruction = new RadiationDetectorConstruction();
 
-    RadPackDetectorMessenger *theMess = new RadPackDetectorMessenger(theDetectorConstruction);
     theRunManager->SetUserInitialization(theDetectorConstruction);
     theRunManager->SetUserInitialization(new RadPackPhysList());
     theRunManager->SetUserInitialization(new RadPackActionInitialization());
 
-    UImanager->ApplyCommand("/control/execute Particle.mac");
     
    // Telling the run manager that these configurations of the system are final. Proceed to run
     theRunManager->Initialize();

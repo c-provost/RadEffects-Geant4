@@ -15,7 +15,7 @@ RadPackDetectorMessenger::RadPackDetectorMessenger(RadiationDetectorConstruction
     fDetectorDir = new G4UIdirectory("/SimGeometry/");
         fDetectorDir->SetGuidance("Simulation Geometry Commands");
    // Creating a positional subdirectory that the plane position commands will sit in. 
-    fPositionalDir = new G4UIdirectory("/SimGeometry/Positional");
+    fPositionalDir = new G4UIdirectory("/SimGeometry/Positional/");
         fPositionalDir->SetGuidance("Pb-Al Plane Construction Position");
    // making the pb-al plane. Will send the command through a pointer to the detectorgeometry
     makePlane = new G4UIcmdWithADoubleAndUnit("/SimGeometry/Positional/makePlane", this);

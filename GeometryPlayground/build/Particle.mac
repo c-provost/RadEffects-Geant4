@@ -1,0 +1,47 @@
+
+# defining the particle to be shot in the simulation
+/gps/particle gamma
+
+# distributing the particle primary verticies across a circular plane
+/gps/pos/type Plane
+/gps/pos/shape Circle
+/gps/pos/radius .5 cm
+
+# locating the center of the circle 
+/gps/pos/centre 0 0 -.5 m
+
+#initializing the energy of the particle source
+/gps/ene/type Mono
+/gps/energy 1.17 MeV
+
+#setting the angular parameters of particle source
+/gps/ang/type cos
+
+/gps/ang/mintheta 0 deg
+/gps/ang/maxtheta 5 deg
+
+/gps/ang/minphi 0 deg
+/gps/ang/maxphi 360 deg
+
+# - - 0 --- 0 -- 0 -- 0 - - 0 -- 0
+/gps/source/add 1
+/gps/particle gamma
+# distributing the particle primary verticies across a circular plane
+/gps/pos/type Plane
+/gps/pos/shape Circle
+/gps/pos/radius .5 cm
+
+# locating the center of the circle 
+/gps/pos/centre 0 0 -.5 m
+
+/gps/ene/type Mono
+/gps/energy 1.33 MeV
+
+#setting the angular parameters of particle source
+/gps/ang/type cos
+
+/gps/ang/mintheta 0 deg
+/gps/ang/maxtheta 5 deg
+
+/gps/ang/minphi 0 deg
+/gps/ang/maxphi 360 deg

@@ -3,4 +3,4 @@
 /SimGeometry/Positional/makePlane -0.2 m
 /SimGeometry/applyChanges
 
-/run/beamOn 10000000
+/run/beamOn 50000000
