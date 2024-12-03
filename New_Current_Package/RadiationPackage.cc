@@ -46,8 +46,7 @@ int main(int argc, char** argv)
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
 
-//    // Setting random engine and seed
-     struct timeval tt;
+//    // Setting random engine and see
      auto pid = getpid();
      auto a = std::chrono::system_clock::now();
 

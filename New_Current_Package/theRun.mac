@@ -1,6 +1,47 @@
 #Setting the file to which histogram information will be written
 /RadiationPack/hitsfile primaryRun_01.root
-/SimGeometry/Positional/makePlane -0.2 m
-/SimGeometry/applyChanges
-
 /run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_01.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_03.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_04.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_05.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_06.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_07.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_08.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_09.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_10.root
+/run/beamOn 10000000
+
+
+
+/SimGeometry/Positional/makePlane -1.4 m
+/SimGeometry/applyChanges
+/RadiationPack/hitsfile primaryRun_11.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_12.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_13.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_14.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_15.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_16.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_17.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_18.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_19.root
+/run/beamOn 10000000
+/RadiationPack/hitsfile primaryRun_20.root
+/run/beamOn 10000000
+

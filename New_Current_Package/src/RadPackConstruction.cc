@@ -23,7 +23,7 @@ RadiationDetectorConstruction::RadiationDetectorConstruction()
    // Initializing the dimensions of the world volume
     xDimWorld = 10*cm;
     yDimWorld = 10*cm;
-    zDimWorld = 0.61 * m;
+    zDimWorld = 1.6 * m;
 
     DefineMaterials();
 
@@ -91,9 +91,9 @@ G4VPhysicalVolume* RadiationDetectorConstruction::Construct()
 
 
 
-    ConstructWafer(.5*cm, .7*cm, 500*um, G4ThreeVector(0., 0., 0.5*m));
+    ConstructWafer(.5*cm, .7*cm, 500*um, G4ThreeVector(0., 0., 1.5*m));
     ConstructScoringLayers(20, .5*cm, .7*cm, 500*um);
-    ConstructPlane(-.2*m, 1.5*mm);
+    //ConstructPlane(-.2*m, 1.5*mm);
 
 
 

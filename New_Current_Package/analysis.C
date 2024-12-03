@@ -17,7 +17,7 @@ int analysis()
 
    // Opening the file for each filename that is defined.
 
-   int numfiles = 1;
+   int numfiles = 7;
 
    std::vector<TFile*> the_files;
    std::vector<TNtuple*> the_tuples;
