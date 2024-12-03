@@ -12,7 +12,7 @@
 #include "G4NistManager.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
-#include "G4GDMLParser.hh"
+//#include "G4GDMLParser.hh"
 #include "G4SystemOfUnits.hh"
 #include "globals.hh"
 #include "FTFP_BERT.hh"
@@ -24,9 +24,9 @@
 #include "RadPackGeometryMessenger.hh"
 
 
-#include "Randomize.hh"
-#include <sys/unistd.h>
-#include <sys/time.h>
+#include <random>
+#include <chrono>
+//#include <sys/time.h>
 #include <time.h>
 
 
@@ -47,17 +47,21 @@ int main(int argc, char** argv)
 
 
 //    // Setting random engine and seed
-//     struct timeval tt;
-//     auto pid = getpid();
-//     gettimeofday(&tt, NULL);
-//     long timeSeed = tt.tv_sec*1000+(tt.tv_usec/1000);
-//     timeSeed += pid*3137;  // different machines, same time --> different seed
-//     timeSeed = std::abs(timeSeed); // take only positive seeds.
-//     G4cout << "<randomSeed>: " << timeSeed << G4endl;
+     struct timeval tt;
+     auto pid = getpid();
+     auto a = std::chrono::system_clock::now();
+
+     time_t b = std::chrono::system_clock::to_time_t(a);
+
+     long int timeint = static_cast<long int> (b);
+
+     long timeSeed = timeint + pid*3137; // different machines, same time --> different seed
+     timeSeed = std::abs(timeSeed); // take only positive seeds.
+     G4cout << "<randomSeed>: " << timeSeed << G4endl;
 
    // Setting Random Generator
     CLHEP::HepRandom::setTheEngine( new CLHEP::HepJamesRandom );
-  	//CLHEP::HepRandom::setTheSeed( timeSeed );
+  	CLHEP::HepRandom::setTheSeed( timeSeed );
 
 
    // Creating new RadiationDetectorConstruction object
